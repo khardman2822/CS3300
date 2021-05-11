@@ -2,7 +2,20 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionDispatch::IntegrationTest
   setup do
+    include Devise::Test::IntegrationHelpers
     @project = projects(:one)
+  end
+
+  test 'GET new' do
+    # Mimic the router behavior of setting the Devise scope through the env.
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+  
+    # Use the sign_in helper to sign in a fixture `User` record.
+    sign_in users(:alice)
+  
+    get :new
+  
+    assert_response :success
   end
 
   test "should get index" do
@@ -45,4 +58,6 @@ class ProjectsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to projects_url
   end
+
+  
 end
